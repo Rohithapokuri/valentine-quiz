@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Our First Valentine 💖</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+/* 🌸 BACKGROUND */
+body{
+  margin:0;
+  min-height:100vh;
+  overflow:hidden;
+  background:linear-gradient(270deg,#ff9a9e,#fad0c4,#ffd1dc);
+  background-size:600% 600%;
+  animation:bgFlow 12s ease infinite;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+@keyframes bgFlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* 💕 FLOATING HEARTS */
+.hearts span{
+  position:absolute;
+  bottom:-50px;
+  font-size:22px;
+  animation:float 8s linear infinite;
+  opacity:0.8;
+}
+
+@keyframes float{
+  0%{transform:translateY(0) scale(0.8);opacity:0}
+  10%{opacity:1}
+  100%{transform:translateY(-110vh) scale(1.2);opacity:0}
+}
+
+/* 💌 CARD */
+.card{
+  background:white;
+  width:90%;
+  max-width:520px;
+  padding:30px;
+  border-radius:22px;
+  box-shadow:0 25px 50px rgba(0,0,0,0.25);
+  text-align:center;
+  animation:pop 1s ease;
+  z-index:10;
+}
+
+@keyframes pop{
+  from{transform:scale(0.8);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+
+h1{color:#ff4f81;}
+p{font-size:16px;color:#555;line-height:1.6;}
+
+button{
+  margin-top:20px;
+  padding:12px 20px;
+  border:none;
+  border-radius:14px;
+  background:#ff4f81;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{transform:scale(1.05);}
+
+/* QUIZ */
+.question{font-size:18px;margin:20px 0;}
+
+.options button{
+  width:100%;
+  margin:8px 0;
+  background:#ffe4ec;
+  color:#333;
+}
+
+.options button:hover{background:#ffb6c1;}
+
+.next{display:none;width:100%;}
+.score{font-size:22px;color:#ff4f81;}
+</style>
+</head>
+
+<body>
+
+<!-- 💕 Hearts -->
+<div class="hearts">
+  <span style="left:10%;animation-delay:0s">💖</span>
+  <span style="left:30%;animation-delay:2s">💗</span>
+  <span style="left:50%;animation-delay:4s">💕</span>
+  <span style="left:70%;animation-delay:1s">💘</span>
+  <span style="left:90%;animation-delay:3s">💞</span>
+</div>
+
+<!-- 🌸 START CARD -->
+<div class="card" id="content">
+  <h1>Hey bujji 💕</h1>
+  <p>
+    A little love quiz made just for you 🤍<br>
+    Because this is our <b>first Valentine’s Day as fiancés</b> 💍
+  </p>
+  <button onclick="startQuiz()">Start the Love Quiz 💌</button>
+</div>
+
+<script>
+const quiz=[
+{
+q:"Which moment became our first unforgettable memory?",
+a:[
+"The day I surprised you on your birthday",
+"A random normal evening",
+"A long phone call",
+"A simple walk outside"
+],
+c:0
+},
+{
+q:"Where did our first kiss happen?",
+a:[
+"At a restaurant",
+"Inside a theatre",
+"At a petrol bunk",
+"On a road trip"
+],
+c:2
+},
+{
+q:"What’s your favorite moment with me?",
+a:[
+"Late night talks",
+"On the sofa",
+"Walking together",
+"Watching movies"
+],
+c:1
+},
+{
+q:"What do we call each other most lovingly?",
+a:[
+"Love & jaan",
+"Bujji & Bangaram",
+"Baby & darling",
+"Mine & yours"
+],
+c:1
+},
+{
+q:"Which type of memory feels the safest with us?",
+a:[
+"Crowded places",
+"Silent understanding moments",
+"Big celebrations",
+"Social gatherings"
+],
+c:1
+},
+{
+q:"What kind of moment do I secretly love the most with you?",
+a:[
+"Deep emotional conversations",
+"Playful moments I pretend to deny",
+"Being extra calm together",
+"Sharing silence peacefully"
+],
+c:1
+},
+{
+q:"What makes our bond different from others?",
+a:[
+"Perfect planning",
+"Comfort without words",
+"Constant excitement",
+"Always agreeing"
+],
+c:3
+}
+];
+
+let index=0,score=0;
+
+function startQuiz(){
+  document.getElementById("content").innerHTML=`
+    <h1>💖 Our Valentine Quiz 💖</h1>
+    <div class="question"></div>
+    <div class="options"></div>
+    <button class="next">Next 💕</button>
+  `;
+  loadQ();
+}
+
+function loadQ(){
+  document.querySelector(".next").style.display="none";
+  document.querySelector(".question").innerHTML=quiz[index].q;
+  const optBox=document.querySelector(".options");
+  optBox.innerHTML="";
+  quiz[index].a.forEach((opt,i)=>{
+    const b=document.createElement("button");
+    b.innerText=opt;
+    b.onclick=()=>check(i,b);
+    optBox.appendChild(b);
+  });
+}
+
+function check(i,b){
+  const btns=document.querySelectorAll(".options button");
+  btns.forEach(x=>x.disabled=true);
+  if(i===quiz[index].c){b.style.background="#90ee90";score++;}
+  else{
+    b.style.background="#ff7f7f";
+    btns[quiz[index].c].style.background="#90ee90";
+  }
+  document.querySelector(".next").style.display="block";
+}
+
+document.addEventListener("click",e=>{
+  if(e.target.classList.contains("next")){
+    index++;
+    if(index<quiz.length) loadQ();
+    else showResult();
+  }
+});
+
+function showResult(){
+  document.getElementById("content").innerHTML=`
+  <h1>💘 Finished 💘</h1>
+  <div class="score">${score} / ${quiz.length}</div>
+  <p>
+Bujji ❤️ Bangaram,<br><br>
+This being our first Valentine as fiancés makes my heart feel so full.  
+Somewhere between our memories, smiles, and silly moments,  
+you became my home 💍💖  
+<br><br>
+No matter the score, my heart already knows its answer —  
+it’s always been you 🤍  
+<br><br>
+I choose you. Always.  
+Happy Valentine’s Day, my forever 🥰
+</p>
+  `;
+}
+</script>
+
+</body>
+</html>
